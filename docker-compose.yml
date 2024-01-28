@@ -13,6 +13,10 @@ services:
     volumes:
       - /var/local/dcm4chee-arc/ldap:/var/lib/openldap/openldap-data
       - /var/local/dcm4chee-arc/slapd.d:/etc/openldap/slapd.d
+    restart: always
+    networks:
+      - innovapacs-dcm4chee
+
   innovapacs-db:
     image: dcm4che/postgres-dcm4chee:15.4-31
     logging:
@@ -29,6 +33,10 @@ services:
       - /var/local/innovapacs-dcm4chee-arc/db:/var/lib/postgresql/data
     ports:
       - "5453:5432"
+    restart: always
+    networks:
+      - innovapacs-dcm4chee
+
   innovapacs-arc:
     image: dcm4che/dcm4chee-arc-psql:5.31.2
     logging:
@@ -58,3 +66,6 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /var/local/innovapacs-dcm4chee-arc/wildfly:/opt/wildfly/standalone
       - /var/local/innovapacs-dcm4chee-arc/storage:/storage
+    restart: always
+    networks:
+      - innovapacs-dcm4chee
