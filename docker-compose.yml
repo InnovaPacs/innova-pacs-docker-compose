@@ -11,8 +11,8 @@ services:
     environment:
       STORAGE_DIR: /storage/fs1
     volumes:
-      - /var/local/dcm4chee-arc/ldap:/var/lib/openldap/openldap-data
-      - /var/local/dcm4chee-arc/slapd.d:/etc/openldap/slapd.d
+      - /var/local/innovapacs-dcm4chee-arc/ldap:/var/lib/openldap/openldap-data
+      - /var/local/innovapacs-dcm4chee-arc/slapd.d:/etc/openldap/slapd.d
     restart: always
     networks:
       - innovapacs-dcm4chee
