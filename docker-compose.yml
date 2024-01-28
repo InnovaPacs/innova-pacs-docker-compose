@@ -69,6 +69,8 @@ services:
     restart: always
     networks:
       - innovapacs-dcm4chee
+    security_opt:
+      - seccomp:unconfined
 
 
 networks:
