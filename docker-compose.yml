@@ -57,7 +57,7 @@ services:
       POSTGRES_USER: pacs
       POSTGRES_PASSWORD: pacs
       WILDFLY_CHOWN: /storage
-      WILDFLY_WAIT_FOR: ldap:390 db:5453
+      WILDFLY_WAIT_FOR: ldap:389 db:5432
     depends_on:
       - innovapacs-ldap
       - innovapacs-db
