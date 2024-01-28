@@ -69,3 +69,8 @@ services:
     restart: always
     networks:
       - innovapacs-dcm4chee
+
+
+networks:
+  innovapacs-dcm4chee:
+    driver: bridge
