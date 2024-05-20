@@ -72,6 +72,29 @@ services:
     security_opt:
       - seccomp:unconfined
 
+  innovapacs-api:
+    build: 
+      context: ./../InnovaPacsApi/
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - innovapacs-dcm4chee
+    ports: 
+      - "4210:4200"
+    depends_on:
+      - innovapacs-db
+
+  innovapacs-web:
+    build: 
+      context: ./../InnovaPacsWeb/
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - innovapacs-dcm4chee
+    ports: 
+      - "4210:4200"
+    depends_on:
+      - innovapacs-api
 
 networks:
   innovapacs-dcm4chee:
