@@ -73,6 +73,7 @@ services:
       - seccomp:unconfined
 
   innovapacs-api:
+    command: bash -c "cd ./../InnovaPacsApi/ && mvn clean package -DskipTests -Dmaven.test.skip=true"
     build: 
       context: ./../InnovaPacsApi/
       dockerfile: Dockerfile
@@ -83,7 +84,6 @@ services:
       - "8090:8090"
     depends_on:
       - innovapacs-db
-    command: bash -c "cd ./../InnovaPacsApi/ && mvn clean package -DskipTests -Dmaven.test.skip=true"
 
   innovapacs-web:
     build: 
