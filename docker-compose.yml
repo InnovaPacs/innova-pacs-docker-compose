@@ -80,7 +80,7 @@ services:
     networks:
       - innovapacs-dcm4chee
     ports: 
-      - "4210:4200"
+      - "8090:8090"
     depends_on:
       - innovapacs-db
 
