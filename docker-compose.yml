@@ -13,7 +13,7 @@ services:
     volumes:
       - /var/local/innovapacs-dcm4chee-arc/ldap:/var/lib/openldap/openldap-data
       - /var/local/innovapacs-dcm4chee-arc/slapd.d:/etc/openldap/slapd.d
-    restart: always
+    restart: unless-stopped
     networks:
       - innovapacs-dcm4chee
 
@@ -33,7 +33,7 @@ services:
       - /var/local/innovapacs-dcm4chee-arc/db:/var/lib/postgresql/data
     ports:
       - "5453:5432"
-    restart: always
+    restart: unless-stopped
     networks:
       - innovapacs-dcm4chee
 
@@ -66,7 +66,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /var/local/innovapacs-dcm4chee-arc/wildfly:/opt/wildfly/standalone
       - /var/local/innovapacs-dcm4chee-arc/storage:/storage
-    restart: always
+    restart: unless-stopped
     networks:
       - innovapacs-dcm4chee
     security_opt:
@@ -77,7 +77,7 @@ services:
     build: 
       context: ./../InnovaPacsApi/
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
     networks:
       - innovapacs-dcm4chee
     ports: 
@@ -89,7 +89,7 @@ services:
     build: 
       context: ./../InnovaPacsWeb/
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
     networks:
       - innovapacs-dcm4chee
     ports: 
