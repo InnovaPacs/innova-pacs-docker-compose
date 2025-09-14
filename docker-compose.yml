@@ -126,7 +126,7 @@ services:
 
   innovapacs-api:
     build: 
-      context: ./innova-pacs-service/
+      context: ./../innova-pacs-service/
       dockerfile: Dockerfile
     restart: unless-stopped
     networks:
@@ -139,7 +139,7 @@ services:
 
   innovapacs-web:
     build: 
-      context: ./innova-pacs-web/
+      context: ./../innova-pacs-web/
       dockerfile: Dockerfile
     restart: unless-stopped
     networks:
