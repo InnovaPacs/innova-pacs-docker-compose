@@ -1,23 +1,19 @@
 version: "3"
 services:
-  innovapacs-ldap:
+  ldap:
     image: dcm4che/slapd-dcm4chee:2.6.5-31.2
     logging:
       driver: json-file
       options:
         max-size: "10m"
     ports:
-      - "390:389"
+      - "389:389"
     environment:
       STORAGE_DIR: /storage/fs1
     volumes:
-      - /var/local/innovapacs-dcm4chee-arc/ldap:/var/lib/openldap/openldap-data
-      - /var/local/innovapacs-dcm4chee-arc/slapd.d:/etc/openldap/slapd.d
-    restart: unless-stopped
-    networks:
-      - innovapacs-dcm4chee
-
-  innovapacs-db:
+      - /var/local/dcm4chee-arc/ldap:/var/lib/openldap/openldap-data
+      - /var/local/dcm4chee-arc/slapd.d:/etc/openldap/slapd.d
+  db:
     image: dcm4che/postgres-dcm4chee:15.4-31
     logging:
       driver: json-file
@@ -30,128 +26,46 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - /var/local/innovapacs-dcm4chee-arc/db:/var/lib/postgresql/data
-    ports:
-      - "5453:5432"
-    restart: unless-stopped
-    networks:
-      - innovapacs-dcm4chee
-
-  innovapacs-arc:
+      - /var/local/dcm4chee-arc/db:/var/lib/postgresql/data
+  arc:
     image: dcm4che/dcm4chee-arc-psql:5.31.2
     logging:
       driver: json-file
       options:
         max-size: "10m"
     ports:
-      - "8095:8080"
-      - "8448:8443"
-      - "9995:9990"
-      - "9998:9993"
-      - "11115:11112"
-      - "2765:2762"
-      - "2578:2575"
-      - "12578:12575"
+      - "8080:8080"
+      - "8443:8443"
+      - "9990:9990"
+      - "9993:9993"
+      - "11112:11112"
+      - "2762:2762"
+      - "2575:2575"
+      - "12575:12575"
     environment:
       POSTGRES_DB: pacsdb
       POSTGRES_USER: pacs
       POSTGRES_PASSWORD: pacs
       WILDFLY_CHOWN: /storage
-      WILDFLY_WAIT_FOR: innovapacs-ldap:389 innovapacs-db:5432
+      WILDFLY_WAIT_FOR: ldap:389 db:5432
     depends_on:
-      - innovapacs-ldap
-      - innovapacs-db
+      - ldap
+      - db
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - /var/local/innovapacs-dcm4chee-arc/wildfly:/opt/wildfly/standalone
-      - /var/local/innovapacs-dcm4chee-arc/storage:/storage
+      - /var/local/dcm4chee-arc/wildfly:/opt/wildfly/standalone
+      - /var/local/dcm4chee-arc/storage:/storage
+
+  ohif:
+    image: ohif/app
+    container_name: ohif-viewer
     restart: unless-stopped
-    networks:
-      - innovapacs-dcm4chee
-    security_opt:
-      - seccomp:unconfined
-  
-  data-base-ris:
-    image: postgres:13
-    networks:
-      - innovapacs-dcm4chee
-    environment:
-      - POSTGRES_USER=innova_ris
-      - POSTGRES_DB=innova_ris
-      - POSTGRES_PASSWORD=InnovaRis123
     ports:
-      - '5452:5432'
-    restart: unless-stopped
+      - "3010:80"
+    depends_on:
+      - arc
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - /var/local/rispacs-db/db:/var/lib/postgresql/data
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    networks:
-      - innovapacs-dcm4chee
+      - ./ohif/app-config.js:/usr/share/nginx/html/app-config.js
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    restart: unless-stopped
-      
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    networks:
-      - innovapacs-dcm4chee
-    depends_on:
-      - zookeeper
-    ports:
-      - 9092:9092
-    restart: unless-stopped
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      
-  kafdrop:
-    image: obsidiandynamics/kafdrop:latest
-    networks:
-      - innovapacs-dcm4chee
-    depends_on:
-      - kafka
-    ports:
-      - 19000:9000
-    restart: unless-stopped
-    environment:
-      KAFKA_BROKERCONNECT: kafka:29092
-
-  innovapacs-api:
-    build: 
-      context: ./../innova-pacs-service/
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    networks:
-      - innovapacs-dcm4chee
-    ports: 
-      - "8090:8090"
-    restart: unless-stopped
-    depends_on:
-      - data-base-ris
-
-  innovapacs-web:
-    build: 
-      context: ./../innova-pacs-web/
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    networks:
-      - innovapacs-dcm4chee
-    ports: 
-      - "4210:4200"
-    restart: unless-stopped
-    depends_on:
-      - innovapacs-api
-
-networks:
-  innovapacs-dcm4chee:
-    driver: bridge
+      APP_CONFIG: /usr/share/nginx/html/app-config.js
