@@ -75,7 +75,7 @@ services:
   data-base-ris:
     image: postgres:13
     networks:
-      - broker-kafka
+      - innovapacs-dcm4chee
     environment:
       - POSTGRES_USER=innova_ris
       - POSTGRES_DB=innova_ris
@@ -91,7 +91,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     networks:
-      - broker-kafka
+      - innovapacs-dcm4chee
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -100,7 +100,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:latest
     networks:
-      - broker-kafka
+      - innovapacs-dcm4chee
     depends_on:
       - zookeeper
     ports:
@@ -117,7 +117,7 @@ services:
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
     networks:
-      - broker-kafka
+      - innovapacs-dcm4chee
     depends_on:
       - kafka
     ports:
