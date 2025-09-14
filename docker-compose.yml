@@ -84,7 +84,9 @@ services:
       - '5452:5432'
     restart: unless-stopped
     volumes:
-      - db_ris_volumes:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/local/rispacs-db/db:/var/lib/postgresql/data
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
