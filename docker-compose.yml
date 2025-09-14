@@ -71,29 +71,82 @@ services:
       - innovapacs-dcm4chee
     security_opt:
       - seccomp:unconfined
+  
+  data-base-ris:
+    image: postgres:13
+    networks:
+      - broker-kafka
+    environment:
+      - POSTGRES_USER=innova_ris
+      - POSTGRES_DB=innova_ris
+      - POSTGRES_PASSWORD=InnovaRis123
+    ports:
+      - '5452:5432'
+    restart: unless-stopped
+    volumes:
+      - db_ris_volumes:/var/lib/postgresql/data
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    networks:
+      - broker-kafka
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    restart: unless-stopped
+      
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    networks:
+      - broker-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    restart: unless-stopped
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    networks:
+      - broker-kafka
+    depends_on:
+      - kafka
+    ports:
+      - 19000:9000
+    restart: unless-stopped
+    environment:
+      KAFKA_BROKERCONNECT: kafka:29092
 
   innovapacs-api:
-    command: bash -c "cd ./../InnovaPacsApi/ && mvn clean package -DskipTests -Dmaven.test.skip=true"
     build: 
-      context: ./../InnovaPacsApi/
+      context: ./innova-pacs-service/
       dockerfile: Dockerfile
     restart: unless-stopped
     networks:
       - innovapacs-dcm4chee
     ports: 
       - "8090:8090"
+    restart: unless-stopped
     depends_on:
-      - innovapacs-db
+      - data-base-ris
 
   innovapacs-web:
     build: 
-      context: ./../InnovaPacsWeb/
+      context: ./innova-pacs-web/
       dockerfile: Dockerfile
     restart: unless-stopped
     networks:
       - innovapacs-dcm4chee
     ports: 
       - "4210:4200"
+    restart: unless-stopped
     depends_on:
       - innovapacs-api
 
