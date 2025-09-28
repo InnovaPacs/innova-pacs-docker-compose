@@ -42,6 +42,7 @@ services:
       - "2762:2762"
       - "2575:2575"
       - "12575:12575"
+      - "104:104"
     environment:
       POSTGRES_DB: pacsdb
       POSTGRES_USER: pacs
