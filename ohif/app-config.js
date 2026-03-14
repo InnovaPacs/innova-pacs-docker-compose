@@ -1,5 +1,5 @@
 window.config = {
-  routerBasename: null,
+  routerBasename: 'med-iq-viewer',
   extensions: [],
   modes: [],
   showStudyList: true,
