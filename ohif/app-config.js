@@ -2,7 +2,18 @@ window.config = {
   routerBasename: null,
   extensions: [],
   modes: [],
-  showStudyList: true,
+  showStudyList: false,
+  whiteLabeling: {
+    createLogoComponentFn: function (React) {
+      return React.createElement('img', {
+        src: '/mediq.png',
+        style: {
+          height: '100px',
+          width: 'auto',
+        },
+      });
+    },
+  },
   dataSources: [
     {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
@@ -24,5 +35,5 @@ window.config = {
       },
     },
   ],
-  defaultDataSourceName: 'dicomweb'
+  defaultDataSourceName: 'dicomweb',
 };
