@@ -7,7 +7,7 @@ window.config = {
     createLogoComponentFn: function (React) {
       return React.createElement('img', {
         src: '/mediq.png',
-        style: { height: '40px', width: 'auto' }
+        style: { height: '100px', width: 'auto' }
       });
     },
   },
