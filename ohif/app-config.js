@@ -1,16 +1,12 @@
 window.config = {
-  routerBasename: null,
+  routerBasename: '/viewer',
   extensions: [],
   modes: [],
   showStudyList: false,
   whiteLabeling: {
     createLogoComponentFn: function (React) {
       return React.createElement('img', {
-        src: '/mediq.png',
-        style: {
-          height: '100px',
-          width: 'auto',
-        },
+        src: '/viewer/mediq.png',
       });
     },
   },
