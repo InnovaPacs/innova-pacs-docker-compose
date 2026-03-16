@@ -59,14 +59,14 @@ services:
       - /var/local/dcm4chee-arc/storage:/storage
 
   ohif:
-    image: ohif/app
+    image: camposbj/ohif-patient-viewer:latest
     container_name: ohif-viewer
     restart: unless-stopped
     ports:
       - "3010:80"
     depends_on:
       - arc
-    volumes:
-      - ./ohif/app-config.js:/usr/share/nginx/html/app-config.js
-    environment:
-      APP_CONFIG: /usr/share/nginx/html/app-config.js
+#    volumes:
+#      - ./ohif/app-config.js:/usr/share/nginx/html/app-config.js
+#      APP_CONFIG: /usr/share/nginx/html/app-config.js
+#    environment:
