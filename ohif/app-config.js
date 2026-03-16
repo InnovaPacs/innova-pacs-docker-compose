@@ -6,7 +6,7 @@ window.config = {
   whiteLabeling: {
     createLogoComponentFn: function (React) {
       return React.createElement('img', {
-        src: '/viewer/mediq.png',
+        src: '/mediq.png',
       });
     },
   },
