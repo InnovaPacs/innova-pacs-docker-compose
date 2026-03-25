@@ -18,9 +18,9 @@ window.config = {
       configuration: {
         friendlyName: 'dcmjs DICOMWeb Server',
         name: 'DCM4CHEE',
-        wadoUriRoot: 'https://bautistaj.dev/pacs/dcm4chee-arc/aets/DCM4CHEE/wado',
-        qidoRoot: 'https://bautistaj.dev/pacs/dcm4chee-arc/aets/DCM4CHEE/rs',
-        wadoRoot: 'https://bautistaj.dev/pacs/dcm4chee-arc/aets/DCM4CHEE/rs',
+        wadoUriRoot: 'https://persist.lat/pacs/dcm4chee-arc/aets/DCM4CHEE/wado',
+        qidoRoot: 'https://persist.lat/pacs/dcm4chee-arc/aets/DCM4CHEE/rs',
+        wadoRoot: 'https://persist.lat/pacs/dcm4chee-arc/aets/DCM4CHEE/rs',
         qidoSupportsIncludeField: true,
         supportsReject: true,
         imageRendering: 'wadors',
