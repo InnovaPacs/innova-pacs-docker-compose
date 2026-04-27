@@ -1,4 +1,4 @@
-version: "3"
+iversion: "3"
 services:
   ldap:
     image: dcm4che/slapd-dcm4chee:2.6.5-31.2
@@ -59,7 +59,7 @@ services:
       - /var/local/dcm4chee-arc/storage:/storage
 
   ohif:
-    image: camposbj/ohif-patient-viewer:latest
+    image: camposbj/ohif-patient-viewer:2.0.0
     container_name: ohif-viewer
     restart: unless-stopped
     ports:
